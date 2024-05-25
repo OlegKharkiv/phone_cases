@@ -15,7 +15,7 @@ export const MODELS = {
     options: [
         {
             label: 'iPhone X',
-            value: 'iphone',
+            value: 'iphonex',
         },
         {
             label: 'iPhone 11',
@@ -51,7 +51,7 @@ export const MATERIALS = {
         },
         {
             label: 'Soft Polycarbonate',
-            value: 'Soft Polycarbonate',
+            value: 'polycarbonate',
             description: "Scratch-resistant coating",
             price: PRODUCT_PRICES.material.polycarbonate,
         },

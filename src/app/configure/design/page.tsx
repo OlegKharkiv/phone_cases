@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { notFound } from "next/navigation";
-import DesignConfigurator from '/src/app/configure/design/DesignConfigurator.tsx';
+import DesignConfigurator from "./DesignConfigurator";
 
 interface PageProps {
     searchParams: {
