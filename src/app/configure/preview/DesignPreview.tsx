@@ -1,7 +1,7 @@
 'use client'
 
 import Phone from '@/components/Phone';
-import { COLORS, MODELS } from '@/validators/option-validator';
+import { COLORS, MODELS, FINISHES } from '@/validators/option-validator';
 import { Configuration } from '@prisma/client';
 import { useEffect, useState } from 'react';
 import Confetti from 'react-dom-confetti';
@@ -58,7 +58,7 @@ const { mutate: createPaymentSession } = useMutation({
 const handleCheckout = () => {
     if(user) {
 //create payment session
-        createCheckoutSession({ configId: id })
+        createPaymentSession({ configId: id })
     } else {
         // need to log in
         localStorage.setItem('configurationId', id)
