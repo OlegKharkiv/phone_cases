@@ -1,9 +1,10 @@
 'use server'
 
-import { BASE_PRICE, PRODUCT_PRICES } from "@/app/config/products";
-import db from "@/db";
-import Order from '@prisma/client';
+import { db } from '@/db';
+import { Order } from '@prisma/client';
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { stripe } from "@/lib/stripe";
+import { BASE_PRICE, PRODUCT_PRICES } from '@/app/config/products';
 
 export const createCheckoutSession = async ({
     configId, 
@@ -18,7 +19,7 @@ export const createCheckoutSession = async ({
         throw new Error('No such configuration found')
     }
 
-    const {getUser} = getKindeServerSession()
+    const { getUser } = getKindeServerSession()
     const user = await getUser()
 
     if(!user) {
@@ -40,7 +41,9 @@ export const createCheckoutSession = async ({
         },
     })
 
-    if(existingOrder) {
+    console.log(user.id, configuration.id)
+
+    if (existingOrder) {
         order = existingOrder
     } else {
         order = await db.order.create({
@@ -48,7 +51,31 @@ export const createCheckoutSession = async ({
                 amount: price / 100,
                 userId: user.id,
                 configurationId: configuration.id,
-            }
+            },
         })
     }
+
+    const product = await stripe.products.create({
+        name: 'Custom iPhone Case',
+        images: [configuration.imageUrl],
+        default_price_data: {
+            currency: 'USD',
+            unit_amount: price,
+        },
+    })
+
+    const stripeSession = await stripe.checkout.sessions.create({
+        success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/thank-you?orderId=${order.id}`,
+        cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/configure/preview?id=${configuration.id}`,
+        payment_method_types: ['card', 'paypal'],
+        mode: "payment",
+        shipping_address_collection: { allowed_countries: ['GB', 'US'] }, 
+        metadata: {
+            userId: user.id,
+            ordered: order.id,
+        },
+        line_items: [{ price: product.default_price as string, quantity: 1}],
+    })
+
+    return { url: stripeSession.url } 
 }
