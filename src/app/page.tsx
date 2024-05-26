@@ -113,8 +113,8 @@ export default function Home() {
               </div>
               <div className="text-lg leading-8">
                 <p>
-                  "The case feels durable and I even got a compliment on the design. Had the case for two and a half months now and 
-                  <span className="p-0.5 bg-slate-800 text-white">the image is super clear</span>, on the case I had before, the image started fading into yellow-ish color after a couple weeks. Love it."
+                  The case feels durable and I even got a compliment on the design. Had the case for two and a half months now and 
+                  <span className="p-0.5 bg-slate-800 text-white">the image is super clear</span>,on the case I had before, the image started fading into yellow-ish color after a couple weeks. Love it.
                 </p>
               </div>
               <div className="flex gap-4 mt-2">
